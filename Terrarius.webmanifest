@@ -1,0 +1,16 @@
+{
+  "name": "Terrarius Web App",
+  "short_name": "Terrarius",
+  "description": "Terrarius: 2D Survival Game",
+  "icons": [
+    {
+      "src": "Images/favicon.png",
+      "sizes": "60x60",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

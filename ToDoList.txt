@@ -1,0 +1,47 @@
+priorities:
+  make block roughness
+  make block end side textures
+  redo player movement code to use offsetX and offsetY
+  make main menu
+
+to do:
+  make player auto jump
+  make mob auto jump
+  put color loading into initialize function
+  make more screen size configurations
+  make chunk auto loading
+  make initial chunk load box
+  create minimap
+  make lighting: https://stackoverflow.com/questions/37226408/calculate-rotation-of-canvas-gradient
+  create input click box
+  create wave function to make waves for world gen
+  make world raycaster function
+  make weather
+  web worker chunk update function
+  make player render function
+  find a girlfriend
+
+done:
+  fix block corner side textures
+  seperate block roughness and textures
+  make merge 2d array function
+  make mob follow AI
+  make updateMobs Environment method
+  Renderer rectIsOnScreenMethod
+  Environment getAdjustedVelocity method
+  eat breakfast
+  add renderer setTimeout and setInterval
+  make Renderer positionIsOnScreen function
+  preload mob pixel maps into image objects for rendering
+  make mobs
+  make Renderer.getRenderCoords function
+  don't generate images for empty chunks
+  add collision detection to map border
+  switch renderer to fixed deltatime
+  fix player going through blocks
+  make player collision detection
+  /JS/Main/GameObjects/World.js 176
+  create block side textures
+  world map render function
+  chunk update function
+  temporarily update generate world function to have air

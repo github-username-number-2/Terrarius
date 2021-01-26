@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Performance Test</title>
+	
+  <script src="JS/Libraries/Lodash.min.js">
+
+	</script>
+</head>
+
+<body>
+	<h3 id="title">Performance over $ tests:</h3>
+  <p>Performance of changing canvas context color: <code>context.fillStyle = "#ffffff";</code></p>
+	<p>Drawing 10x10 square left to right, top to bottom:</p>
+	<canvas id="c1" width="100" height="100"></canvas>
+	<p id="res1"></p>
+  <p>Context color is changed every draw.</p>
+	<p>____________________</p>
+	<p>Drawing 10x10 square drawing all of one color first then switching:</p>
+	<canvas id="c2" width="100" height="100"></canvas>
+	<p id="res2"></p>
+  <p>Context color is changed only once.</p>
+	<p>____________________</p>
+	<p id="resf"></p>
+	<script>
+		const ctx1 = c1.getContext("2d"),
+      ctx2= c2.getContext("2d");
+
+    const p = () => performance.now();
+
+    const testNumber = 1000;
+
+    title.innerHTML = title.innerHTML.replace("$", testNumber);
+
+    setTimeout(function () {
+      const p1a = [];
+      for (let t = 0; t < testNumber; t++) {
+        const p1 = p();
+        ctx1.fillStyle = "#ff55ff";
+        for (let i = 0; i < 100; i++) {
+          ctx1.fillStyle === "#ff55ff" ? ctx1.fillStyle = "#ddeedd" : ctx1.fillStyle = "#ff55ff";
+          ctx1.fillRect(i % 10 * 10, Math.floor(i / 10) * 10, 10, 10);
+        }
+        p1a.push(p() - p1);
+      }
+      const t1 = p1a.reduce((a, b) => a + b) / testNumber;
+      res1.innerHTML = _.round(t1, 4) + "ms";
+
+      const p2a = [];
+      for (let t = 0; t < testNumber; t++) {
+        const p2 = p();
+        ctx2.fillStyle = "#ddeedd";
+        for (let i = 0; i < 100; i += 2) {
+          ctx2.fillRect(i % 10 * 10, Math.floor(i / 10) * 10, 10, 10);
+        }
+        ctx2.fillStyle = "#ff55ff";
+        for (let i = 1; i < 100; i += 2) {
+          ctx2.fillRect(i % 10 * 10, Math.floor(i / 10) * 10, 10, 10);
+        }
+        p2a.push(p() - p2);
+      }
+      const t2 = p2a.reduce((a, b) => a + b) / testNumber;
+      res2.innerHTML = _.round(t2, 4) + "ms";
+
+      const slowest = Math.max(t1, t2),
+        fastest = Math.min(t1, t2);
+
+      resf.innerHTML = `test 1 is ${_.round(t1 - t2, 4)}ms (${_.round(slowest / fastest * 100, 4)}%) ${t1 > t2 ? "slower" : "faster"} than test 2`;
+    }, 500);
+	</script>
+</body>
+
+</html>

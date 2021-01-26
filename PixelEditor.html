@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pixel Editor</title>
+
+	<link href="Images/favicon.png" rel="icon" />
+
+	<applet code="applet.class" width=""></applet>
+
+	<style>
+		* {
+			font-family: Sans-serif;
+		}
+
+		html,
+		body {
+			margin: 0px;
+			border: 0px;
+		}
+
+		p,
+		b {
+			cursor: default;
+		}
+
+		h3 {
+			font-size: 3vh;
+			cursor: default;
+		}
+
+		input[type="number"],
+		input[type="text"] {
+			width: 16vw;
+			height: 3vh;
+			border: 1px solid #000000;
+			border-radius: 4px;
+		}
+
+		button {
+			width: 8vw;
+			height: 3.4vh;
+			font-size: 2vh;
+			border: 1px solid #000000;
+			border-radius: 4px;
+		}
+
+		#colorInput {
+			width: 3vh;
+			height: 3vh;
+			border: 1px solid #000000;
+			border-radius: 4px;
+		}
+
+		#canvasContainer {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 36vw;
+			height: 80vh;
+			margin: 10vh 6vw 10vh 6vw;
+		}
+
+		#configContainer {
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			width: 36vw;
+			height: 80vh;
+			margin: 10vh 6vw 10vh 6vw;
+		}
+
+		#toolContainer {
+			display: inline-block;
+			position: absolute;
+			width: 10vw;
+			height: 60vh;
+			left: 45vw;
+			top: 20vh;
+			border: 1px solid #000000;
+		}
+
+		#colorContainer {
+			position: relative;
+			width: 20vw;
+			height: 50vh;
+			margin: 1vw;
+			border-top: 1px solid #000000;
+			border-bottom: 1px solid #000000;
+			overflow: scroll;
+		}
+
+		#resultContainer {
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			width: 14vw;
+			height: 100%;
+			text-align: left;
+		}
+
+		#resultContainer>button {
+			width: 14.4vw;
+			margin-top: 1vh;
+		}
+
+		#resultContainer>h3 {
+			position: relative;
+			text-align: center;
+		}
+
+		#result {
+			position: absolute;
+			top: 20vh;
+			left: 0px;
+			width: 14vw;
+			height: 70%;
+			resize: none;
+		}
+
+		#canvas {
+			position: relative;
+			border: 2px solid #cfcfcf;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			background-color: #eaeaea;
+      outline: none;
+		}
+
+		#toolContainer>p {
+			position: relative;
+			font-size: 3vh;
+			text-align: center;
+		}
+
+		.colorBox {
+			display: inline-block;
+			position: relative;
+			width: 8vw;
+			height: 14vh;
+			padding: 1vh 1vw 1vh 1vw;
+			cursor: pointer;
+		}
+
+		.colorBox>*,
+		.colorBox>*>* {
+			cursor: pointer;
+		}
+
+		.colorBox:hover {
+			background-color: #dedede;
+		}
+
+		.colorBox>button {
+			width: 100%;
+		}
+
+		.colorIcon {
+			width: 100%;
+			height: 0.75vh;
+			border: 1px solid #000000;
+		}
+
+		.colorText {
+			left: 6vh;
+			margin-bottom: 1vh;
+			font-size: 3vh;
+		}
+
+		.tool {
+			display: inline-block;
+			position: relative;
+			width: 3vw;
+			height: 3vw;
+			padding: 1vw;
+			outline: 1px solid #000000;
+			background-color: #ffffff;
+			margin-top: -0.3vw;
+			cursor: pointer;
+		}
+
+		.tool:hover {
+			background-color: #dedede;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="canvasContainer">
+		<canvas id="canvas"></canvas>
+	</div>
+	<div id="configContainer">
+		<h3>Width</h3>
+		<input type="number" id="widthInput" value="5">
+    <br>
+    <h3>Height</h3>
+    <input type="number" id="heightInput" value="5">
+    <h3>Colors <button id="addColor">Add Color</button> <input type="color" id="colorInput" /></h3>
+    <div id="colorContainer"></div>
+    <div id="resultContainer">
+      <h3>Result</h3>
+      <button id="formatDrawing">Format Drawing</button>
+      <button id="copyData">Copy Image Data</button>
+      <textarea type="text" readonly id="result" placeholder="click 'Format Drawing' to produce image data"></textarea>
+    </div>
+  </div>
+  <div id="toolContainer">
+    <p>Tools</p>
+  </div>
+  
+  <script>
+    try {
+      const pixelSize = 60;
+
+      const query = query => document.querySelector(query);
+
+      addEventListener("contextmenu", event => event.preventDefault());
+      addEventListener("selectstart", event => event.preventDefault());
+
+      const canvas = query("#canvas"),
+        ctx = canvas.getContext("2d");
+    
+      const widthInput = query("#widthInput"),
+        heightInput = query("#heightInput");
+
+      const canvasContainer = query("#canvasContainer"),
+        colorContainer = query("#colorContainer"),
+        toolContainer = query("#toolContainer");
+
+      const addColor = query("#addColor"),
+        colorInput = query("#colorInput");
+
+      const formatDrawing = query("#formatDrawing"),
+        copyData = query("#copyData"),
+        dataResult = query("#result");
+
+      widthInput.addEventListener("keyup", resizeCanvas);
+      heightInput.addEventListener("keyup", resizeCanvas);
+      widthInput.addEventListener("mouseup", resizeCanvas);
+      heightInput.addEventListener("mouseup", resizeCanvas);
+
+      addEventListener("resize", resizeCanvas);
+
+      canvas.addEventListener("mousemove", updateCanvas);
+      canvas.addEventListener("mouseout", event => updateCanvas(event, true));
+
+      canvas.style.backgroundSize = "100% 100%";
+
+      canvas.tabIndex = 0;
+
+      const pixelMap = [];
+
+      let colorBoxes = [];
+      let mouseDown = false;
+      
+      let currentColor = null,
+        savedColor;
+
+      let selectedTool;
+
+      const tools = [
+        {
+          name: "pencil",
+          icon: "data:image/png;base64,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",
+          title: "Pencil Tool (p)",
+          shortcutKey: "p",
+          click: function () {
+            currentColor = savedColor;
+            
+            activateTool(this.element, this.name);
+          },
+        },
+        {
+          name: "eraser",
+          icon: "data:image/png;base64,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",
+          title: "Eraser Tool (e)",
+          shortcutKey: "e",
+          click: function () {
+            currentColor = savedColor;
+            currentColor = null;
+
+            activateTool(this.element, this.name);
+          },
+        },
+        {
+          name: "colorPicker",
+          icon: "data:image/png;base64,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",
+          title: "Color Picker (v)",
+          shortcutKey: "v",
+          click: function () {
+            activateTool(this.element, this.name);
+          },
+        },
+        {
+          name: "backgroundImage",
+          icon: "data:image/png;base64,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",
+          title: "Use Background Image (b)",
+          shortcutKey: "b",
+          click: function () {
+            if (canvas.style.backgroundImage) {
+              canvas.style.backgroundImage = "";
+            } else {
+              const url = prompt("Enter image URL:");
+              canvas.style.backgroundImage = `url(${url})`;
+
+              activateTool(this.element, this.name);
+            }
+          },
+        }
+      ];
+      const toolElements = [];
+
+      function activateTool(element, name) {
+        toolElements.forEach(tool => tool.style.backgroundColor = "");
+        element.style.backgroundColor = "#dedede";
+
+        selectedTool = name;
+      }
+
+      tools.forEach(toolData => {
+        const img = document.createElement("img");
+        img.className = "tool";
+        img.src = toolData.icon;
+        img.title = toolData.title;
+        img.addEventListener("click", () => toolData.click());
+        toolContainer.appendChild(img);
+
+        toolElements.push(img);
+        toolData.element = img;
+      });
+
+      tools[0].click();
+
+      resizeCanvas();
+
+      formatDrawing.addEventListener("click", () => {
+        dataResult.value = JSON.stringify(pixelMap).substring(1).slice(0, -1) + ",";
+      });
+
+      copyData.addEventListener("click", () => {
+        dataResult.select();
+        navigator.clipboard.writeText(dataResult.value);
+      });
+
+      canvas.addEventListener("keydown", event => {
+        const selectedTool = tools.find(tool => tool.shortcutKey === event.key);
+        selectedTool.click();
+      });
+
+      addColor.addEventListener("click", event => {
+        const selectedColor = colorInput.value;
+
+        const div = document.createElement("div");
+        div.className = "colorBox";
+        div.hexColor = selectedColor;
+        colorBoxes.push(div);
+
+        const header = document.createElement("p");
+     
+        const colorText = document.createElement("b");
+        colorText.innerHTML = selectedColor;
+        colorText.className = "colorText";
+        header.appendChild(colorText);
+
+        const colorIcon = document.createElement("div");
+        colorIcon.className = "colorIcon";
+        colorIcon.style.backgroundColor = selectedColor;
+        header.appendChild(colorIcon);
+
+        div.appendChild(header);
+
+        const removeButton = document.createElement("button");
+        removeButton.innerHTML = "Remove Color";
+        removeButton.addEventListener("click", event => {
+          const targetDiv = event.target.parentElement;
+          targetDiv.parentElement.removeChild(targetDiv);
+
+          colorBoxes = colorBoxes.filter(box => !box.isSameNode(targetDiv));
+        });
+        div.appendChild(removeButton);
+        
+        colorContainer.insertBefore(div, colorContainer.firstChild);
+
+        div.addEventListener("click", event => {
+          tools[0].click();
+          
+          savedColor = currentColor = div.hexColor;
+
+          colorBoxes.forEach(box => box.style.backgroundColor = "");
+          
+          div.style.backgroundColor = "#dbdbdb";
+        });
+      });
+
+      canvas.addEventListener("mousedown", event => {
+        mouseDown = true;
+        updateCanvas(event);
+      });
+      document.addEventListener("mouseup", () => mouseDown = false);
+
+      function setPixel(x, y) {
+        x = Math.floor(canvas.width / canvas.offsetWidth * x / pixelSize),
+          y = Math.floor(canvas.height / canvas.offsetHeight * y / pixelSize);
+
+        pixelMap[y][x] = currentColor;
+      }
+      function getPixel(x, y) {
+        x = Math.floor(canvas.width / canvas.offsetWidth * x / pixelSize),
+          y = Math.floor(canvas.height / canvas.offsetHeight * y / pixelSize);
+
+        return pixelMap[y][x];
+      }
+
+      function updateCanvas(event, mouseout) {
+        if (event && mouseDown && !mouseout && ["pencil", "eraser"].includes(selectedTool)) {
+          setPixel(event.offsetX, event.offsetY);
+        } else if (selectedTool === "colorPicker" && mouseDown) {
+          !function () {
+            const targetColor = getPixel(event.offsetX, event.offsetY);
+          
+            if (!targetColor) {
+              return;
+            }
+
+            for (const box of colorBoxes) {
+              if (box.hexColor === targetColor) {
+                return;
+              }
+            }
+            colorInput.value = targetColor;
+            addColor.click();
+          }();
+        }
+
+        const wValue = parseInt(widthInput.value),
+          hValue = parseInt(heightInput.value);
+
+        ctx.globalAlpha = 1;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let y = 0; y < hValue; y++) {
+          for (let x = 0; x < wValue; x++) {
+            if (pixelMap[y][x]) {
+              ctx.fillStyle = pixelMap[y][x];
+              ctx.fillRect(
+                x * pixelSize,
+                y * pixelSize,
+                pixelSize,
+                pixelSize,
+              );
+            }
+          }
+        }
+
+        if (!event || mouseout) return;
+
+        const rect = canvas.getBoundingClientRect();
+
+        const left = Math.floor(canvas.width / canvas.offsetWidth * event.offsetX / pixelSize),
+          top = Math.floor(canvas.height / canvas.offsetHeight * event.offsetY / pixelSize);
+
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = "#f2f2f2";
+        ctx.fillRect(
+          left * pixelSize,
+          top * pixelSize,
+          pixelSize,
+          pixelSize,
+        );
+      }
+
+      function resizeCanvas() {
+        const wValue = parseInt(widthInput.value),
+          hValue = parseInt(heightInput.value);
+
+        if (
+          wValue <= 0 || hValue <= 0
+          || isNaN(wValue) || isNaN(hValue)
+        ) return;
+
+        pixelMap.length = hValue;
+        for (let y = 0; y < hValue; y++) {
+          if (!Array.isArray(pixelMap[y])) {
+            pixelMap[y] = [];
+            pixelMap[y].length = wValue;
+            pixelMap[y].fill(null);
+          } else {
+            for (let x = 0; x < wValue; x++) {
+              if (!pixelMap[y][x] && pixelMap[y][x] !== null) {
+                pixelMap[y][x] = null;
+              }
+            }
+            
+            for (let i = wValue; i < pixelMap[y].length; i ++) {
+              pixelMap[y].pop();
+            }
+          }
+        }
+
+        const cWidth = canvas.width = wValue * pixelSize,
+          cHeight = canvas.height = hValue * pixelSize;
+
+        canvas.style.left = canvas.style.top = "0px";
+      
+        if (cWidth >= cHeight) {
+          canvas.style.width = canvas.style.height = "100%";
+
+          const newHeight = cHeight / cWidth * canvas.offsetWidth;
+          canvas.style.top = (canvas.offsetHeight - newHeight) / 2 + "px";
+          canvas.style.height = newHeight + "px";
+        } else {
+          canvas.style.height = canvas.style.width = "100%";
+
+          const newWidth = cWidth / cHeight * canvas.offsetHeight;
+          canvas.style.left = (canvas.offsetWidth - newWidth) / 2 + "px";
+          canvas.style.width = newWidth + "px";
+        }
+
+        updateCanvas();
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lines of Code</title>
+</head>
+<body>
+	<p id="result"></p>
+	<script>
+		const req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        document.getElementById("result").innerHTML = this.responseText;
+      } else if (this.readyState === 4 && this.status !== 200) {
+        document.getElementById("result").innerHTML = "ERROR " + this.status;
+      }
+    };
+    req.open(
+      "GET",
+      "https://api.codetabs.com/v1/loc?github=lil-peen/Terrarius",
+      true,
+    );
+	  req.send();
+  </script>
+</body>
+
+</html>
