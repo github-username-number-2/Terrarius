@@ -1,0 +1,14 @@
+html, body {
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  background-color: #000000;
+}
+canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border: none;
+  outline: none;
+}
