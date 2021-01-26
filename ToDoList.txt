@@ -1,4 +1,5 @@
 priorities:
+  spend hours restoring the original code
   make block roughness
   make block end side textures
   redo player movement code to use offsetX and offsetY
@@ -22,6 +23,8 @@ to do:
   find a girlfriend
 
 done:
+  delete repl
+  delete github repository
   fix block corner side textures
   seperate block roughness and textures
   make merge 2d array function
