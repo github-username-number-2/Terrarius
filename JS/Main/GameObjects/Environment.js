@@ -76,8 +76,8 @@ const Environment = {
 
       const AIVelocity = mob.AI(playerX, playerY);
 
-      mob.xVelocity += AIVelocity[0];
-      mob.yVelocity += AIVelocity[1];
+      mob.xVelocity = AIVelocity[0];
+      mob.yVelocity = AIVelocity[1];
 
       mob.yVelocity += this.gravity;
       mob.yVelocity > this.terminalVelocity && (mob.yVelocity = this.terminalVelocity);

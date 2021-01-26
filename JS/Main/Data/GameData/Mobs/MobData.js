@@ -26,10 +26,10 @@ export default {
     abramsTank: class extends Mob {
       image = MobTextures.abramsTank.image;
 
-      width = 36;
-      height = 14;
+      width = 18;
+      height = 7;
 
-      hitbox = [0, 0, 36, 14];
+      hitbox = [0, 0, 18, 7];
 
       collisions = defCollisionMechanics;
 

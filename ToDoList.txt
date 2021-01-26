@@ -1,5 +1,5 @@
 priorities:
-  spend hours restoring the original code
+  make Block class methods
   make block roughness
   make block end side textures
   redo player movement code to use offsetX and offsetY
@@ -23,6 +23,7 @@ to do:
   find a girlfriend
 
 done:
+  spend hours restoring the original code
   delete repl
   delete github repository
   fix block corner side textures
