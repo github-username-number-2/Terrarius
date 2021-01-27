@@ -1,7 +1,4 @@
 priorities:
-  make Block class methods
-  make block roughness
-  make block end side textures
   redo player movement code to use offsetX and offsetY
   make main menu
 
@@ -22,7 +19,13 @@ to do:
   make player render function
   find a girlfriend
 
+maybe will not do:
+  make block end side textures
+
 done:
+  make block roughness
+  make getDiagonalSurroundingBlocks Block class method
+  make getSurroundingBlocks Block class method
   spend hours restoring the original code
   delete repl
   delete github repository

@@ -20,11 +20,15 @@ export default {
       type: "solid",
 
       sideSmoothness: "rough",
+
+      allowedSideTextures: ["grass"],
     },
     stone: {
       type: "solid",
 
       sideSmoothness: "rough",
+
+      allowedSideTextures: [],
     },
   },
 };

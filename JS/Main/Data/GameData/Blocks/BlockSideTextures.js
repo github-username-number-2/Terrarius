@@ -15,9 +15,9 @@ const BlockSideTextures = {
     //top-right corner
     cornerMap: [
       ["un:0", "un:0", "un:0", "un:0", "gn:0", "gn:0", "gn:0", "gn:0"],
+      ["un:0", "un:0", "un:0", "un:0", "gn:0", "gn:0", "gn:0", "gn:0"],
       ["un:0", "un:0", "un:0", "un:0", "gn:0", "gn:1", "gn:0", "gn:0"],
       ["un:0", "un:0", "un:0", "un:0", "gn:1", "gn:1", "gn:0", "gn:0"],
-      ["un:0", "un:0", "un:0", "un:0", "gn:1", "gn:1", "gn:1", "gn:0"],
     ],
     //end on right side
     endMap: [
@@ -25,6 +25,13 @@ const BlockSideTextures = {
       ["gn:0", "gn:0", "gn:0", "gn:0", "gn:0", "gn:0", "gn:0", "gn:0"],
       ["gn:0", "gn:0", "gn:1", "gn:0", "gn:1", "gn:1", "gn:0", "gn:1"],
       ["gn:1", "gn:1", "un:0", "gn:1", "un:0", "un:0", "gn:1", "un:0"],
+    ],
+    //top-right inside corner
+    insideCornerMap: [
+      ["un:0", "un:0", "un:0", "un:0", "gn:1", "gn:1", "gn:0", "gn:0"],
+      ["un:0", "un:0", "un:0", "un:0", "un:0", "gn:1", "gn:1", "gn:0"],
+      ["un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "gn:1", "gn:1"],
+      ["un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "gn:1", "un:0"],
     ],
   },
 };
@@ -35,6 +42,7 @@ Object.keys(BlockSideTextures).forEach(blockName => {
     BlockSideTextures[blockName].sideMap,
     BlockSideTextures[blockName].cornerMap,
     BlockSideTextures[blockName].endMap,
+    BlockSideTextures[blockName].insideCornerMap,
   ];
 
   textureMaps.forEach(textureMap => {

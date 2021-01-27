@@ -50,20 +50,16 @@ async function generateWorld(size, evilBiome, seed, updateFunction = () => { }) 
 
   let y = 180, operator = 0;
   for (let i = 0; i < WorldGenerator.width; i++) {
-    WorldGenerator.setBlock(i, y, "dirt");
-    WorldGenerator.setSideTexture(i, y, 0, "grass");
+    WorldGenerator.fillArea(i, y, 1, i, "dirt");
     operator ? y++ : y--;
     y >= 180 && (operator = 0);
     y <= 170 && (operator = 1);
   }
 
-  WorldGenerator.setBlock(450, 176, "dirt");
+  WorldGenerator.fillArea(440, 170, 20, 10, "air");
 
-  WorldGenerator.setSideTexture(450, 176, 0, "grass");
-  WorldGenerator.setSideTexture(450, 176, 1, "grass");
-  WorldGenerator.setSideTexture(450, 176, 2, "grass");
-  WorldGenerator.setSideTexture(450, 176, 3, "grass");
-  
+  WorldGenerator.fillExposedSideTextures(0, 170, width, 11, "grass");
+
   WorldGenerator.fillAreaRandom(
     196,
     30,

@@ -5,9 +5,20 @@ import BlockData from "./BlockData.js";
 //tr:0 === null === transparent
 const BlockSmoothness = {
   rough: {
-    map: [
-      ["tr:0", "tr:0", "bk:0", "tr:0", "bk:0", "bk:0", "tr:0", "bk:0"],
-      ["bk:0", "bk:0", "un:0", "bk:0", "un:0", "un:0", "bk:0", "un:0"],
+    sideMap: [
+      ["tr:0", "bk:0", "bk:0", "bk:0", "tr:0", "bk:0", "bk:0", "tr:0"],
+      ["bk:0", "un:0", "un:0", "un:0", "bk:0", "un:0", "un:0", "bk:0"],
+    ],
+    cornerMap: [
+      ["un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "tr:0", "tr:0"],
+      ["un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "bk:0", "tr:0"],
+    ],
+    endMap: [
+      //
+    ],
+    insideCornerMap: [
+      ["un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "bk:0"],
+      ["un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "un:0"],
     ],
 
     //block has n * pixelWidth shorter hit box on this side
@@ -18,32 +29,40 @@ const BlockSmoothness = {
 
 //replaces color abbreviations with hexadecimal color values and fills unused space
 Object.keys(BlockSmoothness).forEach(blockName => {
-  const textureMap = BlockSmoothness[blockName].map;
-  textureMap.length = BlockData.yBlockPixels;
+  const textureMaps = [
+    BlockSmoothness[blockName].sideMap,
+    BlockSmoothness[blockName].cornerMap,
+    BlockSmoothness[blockName].endMap,
+    BlockSmoothness[blockName].insideCornerMap,
+  ];
 
-  for (let yIndex = 0; yIndex < textureMap.length; yIndex++) {
-    let yArray = textureMap[yIndex];
-    textureMap[yIndex] = yArray || (yArray = []);
-    yArray.length = BlockData.xBlockPixels;
+  textureMaps.forEach(textureMap => {
+    textureMap.length = BlockData.yBlockPixels;
 
-    for (let xIndex = 0; xIndex < yArray.length; xIndex++) {
-      let pixel = yArray[xIndex];
-      
-      //if pixel is not already hexadecimal
-      if (pixel && pixel.indexOf("#")) {
-        pixel = pixel.split(":");
-        try {
-          yArray[xIndex] = ColorPalette[pixel[0]][pixel[1]];
-        } catch (error) {
-          throw new RangeError(
-            `Color with identifier ${pixel.join(":")} not found in color palette in block with name ${blockName} in /JS/Main/Data/GameData/BlockSmoothness.js`
-          );
+    for (let yIndex = 0; yIndex < textureMap.length; yIndex++) {
+      let yArray = textureMap[yIndex];
+      textureMap[yIndex] = yArray || (yArray = []);
+      yArray.length = BlockData.xBlockPixels;
+
+      for (let xIndex = 0; xIndex < yArray.length; xIndex++) {
+        let pixel = yArray[xIndex];
+
+        //if pixel is not already hexadecimal
+        if (pixel && pixel.indexOf("#")) {
+          pixel = pixel.split(":");
+          try {
+            yArray[xIndex] = ColorPalette[pixel[0]][pixel[1]];
+          } catch (error) {
+            throw new RangeError(
+              `Color with identifier ${pixel.join(":")} not found in color palette in block with name ${blockName} in /JS/Main/Data/GameData/BlockSmoothness.js`
+            );
+          }
+        } else {
+          yArray[xIndex] = undefined;
         }
-      } else {
-        yArray[xIndex] = undefined;
       }
     }
-  }
+  });
 });
 
 export default BlockSmoothness;

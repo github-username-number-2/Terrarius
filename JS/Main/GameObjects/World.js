@@ -11,6 +11,7 @@ if this is implemented, save files may be significantly longer (hundreds of giga
 
 import BlockTextures from "/JS/Main/Data/GameData/Blocks/BlockTextures.js";
 import BlockSideTextures from "/JS/Main/Data/GameData/Blocks/BlockSideTextures.js";
+import BlockSideSmoothness from "/JS/Main/Data/GameData/Blocks/BlockSmoothness.js";
 
 import BlockData from "/JS/Main/Data/GameData/Blocks/BlockData.js";
 import ChunkData from "/JS/Main/Data/GameData/ChunkData.js";
@@ -54,8 +55,8 @@ const xChunks = xBlocks / chunkWidth,
 const xRenderChunks = xChunks + 1,
   yRenderChunks = yChunks + 1;
 
-function createBlock(blockName) {
-  return blockName === "air" ? null : new Block(blockName);
+function createBlock(x, y, blockName) {
+  return blockName === "air" ? null : new Block(x, y, blockName);
 }
 
 /*
@@ -186,6 +187,9 @@ const World = {
         //chunk is not blank
         loadChunk = true;
 
+        const surroundingBlocks = block.getSurroundingBlocks(),
+          diagonalSurroundingBlocks = block.getDiagonalSurroundingBlocks();
+
         let blockMap = BlockTextures[block.blockName].map;
         for (let i = 0; i < block.sides.length; i++) {
           //layers side texture
@@ -207,6 +211,67 @@ const World = {
             );
 
             blockMap = merge2DArray(blockMap, blockCorner, [undefined]);
+          }
+        }
+        for (let i = 0; i < block.sides.length; i++) {
+          //layers inside corner side textures
+          const iIncremented = (i + 1) % 4,
+            side1 = surroundingBlocks[i]?.sides[iIncremented],
+            side2 = surroundingBlocks[iIncremented]?.sides[i];
+          if (
+            surroundingBlocks[i]
+            && side1 === side2
+            && block.blockData.allowedSideTextures.includes(side1)
+          ) {
+            const insideCorner = rotateArray(
+              BlockSideTextures[side1].insideCornerMap,
+              i,
+            );
+
+            blockMap = merge2DArray(blockMap, insideCorner, [undefined]);
+          }
+        }
+        for (let i = 0; i < block.sides.length; i++) {
+          //layers side smoothness
+          if (!surroundingBlocks[i] && surroundingBlocks[i] !== undefined) {
+            const blockSide = rotateArray(
+              BlockSideSmoothness[block.blockData.sideSmoothness].sideMap,
+              i,
+            );
+
+            blockMap = merge2DArray(blockMap, blockSide, [undefined]);
+          }
+        }
+        for (let i = 0; i < block.sides.length; i++) {
+          //layers corner smoothness
+          if (
+            !surroundingBlocks[i] && surroundingBlocks[i] !== undefined
+            && !surroundingBlocks[(i + 1) % 4] && surroundingBlocks[(i + 1) % 4] !== undefined
+          ) {
+            const blockCorner = rotateArray(
+              BlockSideSmoothness[block.blockData.sideSmoothness].cornerMap,
+              i,
+            );
+
+            blockMap = merge2DArray(blockMap, blockCorner, [undefined]);
+          }
+        }
+        for (let i = 0; i < block.sides.length; i++) {
+          //layers inside corner side smoothness
+          const iIncremented = (i + 1) % 4,
+            side1Smoothness = surroundingBlocks[i]?.blockData?.sideSmoothness,
+            side2Smoothness = surroundingBlocks[iIncremented]?.blockData?.sideSmoothness;
+          if (
+            side1Smoothness
+            && side1Smoothness === side2Smoothness
+            && diagonalSurroundingBlocks[i]?.blockData?.type !== "solid"
+          ) {
+            const insideCorner = rotateArray(
+              BlockSideSmoothness[side1Smoothness].insideCornerMap,
+              i,
+            );
+
+            blockMap = merge2DArray(blockMap, insideCorner, [undefined]);
           }
         }
 
@@ -273,7 +338,7 @@ const World = {
     return this.map[y][x];
   },
   setBlock(x, y, blockName) {
-    this.map[y][x] = createBlock(blockName);
+    this.map[y][x] = createBlock(x, y, blockName);
     this.updateChunkImage(...this.getChunkCoords(x, y));
   },
   getChunkCoords(x, y) {

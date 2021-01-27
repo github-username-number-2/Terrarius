@@ -1,8 +1,8 @@
 import Block from "/JS/Main/Classes/Block.js";
 
-function createBlock(blockName) {
+function createBlock(x, y, blockName) {
   //air blocks are null
-  return blockName === "air" ? null : new Block(blockName);
+  return blockName === "air" ? null : new Block(x, y, blockName);
 }
 
 const WorldGenerator = {
@@ -25,25 +25,25 @@ const WorldGenerator = {
     }
   },
 
-  fillMap(fillBlock = "air") {
+  fillMap(fillBlock) {
     const width = this.width,
       height = this.height;
-    
+
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        this.map[y][x] = createBlock(fillBlock);
+        this.map[y][x] = createBlock(x, y, fillBlock);
       }
     }
   },
 
   getBlock(x, y) {
-    return this.map[y]?.[x] || null;
+    return this.map[y] ?.[x];
   },
   getSideTextures(x, y) {
-    return this.map[y]?.[x]?.sides || null;
+    return this.map[y] ?.[x] ?.sides || null;
   },
   setBlock(x, y, block) {
-    !this.isMapEdge(x, y) && (this.map[y][x] = createBlock(block));
+    !this.isMapEdge(x, y) && (this.map[y][x] = createBlock(x, y, block));
   },
   setSideTexture(x, y, side, texture) {
     !this.isMapEdge(x, y) && (this.map[y][x].sides[side] = texture);
@@ -79,6 +79,30 @@ const WorldGenerator = {
     }
   },
 
+  setExposedSideTextures(x, y, texture) {
+    const surroundingBlocks = [
+      this.getBlock(x, y - 1),
+      this.getBlock(x + 1, y),
+      this.getBlock(x, y + 1),
+      this.getBlock(x - 1, y),
+    ];
+    for (let i = 0; i < 4; i++) {
+      if (!surroundingBlocks[i] && surroundingBlocks[i] !== undefined) {
+        this.setSideTexture(x, y, i, texture);
+      }
+    }
+  },
+
+  fillExposedSideTextures(xPos, yPos, width, height, sideTexture, targetBlockTypes) {
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
+        if (this.map[y + yPos][x + xPos]) {
+          this.setExposedSideTextures(x + xPos, y + yPos, sideTexture);
+        }
+      }
+    }
+  },
+
   fillAreaRandom(xPos, yPos, width, height, fillBlock, density) {
     const fillNumber = width * height,
       blockCount = Math.round(fillNumber * density);
@@ -104,4 +128,4 @@ const WorldGenerator = {
   },
 };
 
-export default WorldGenerator;                            
+export default WorldGenerator; 
