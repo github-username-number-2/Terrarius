@@ -3,11 +3,12 @@ import ColorPalette from "../ColorPalette.js";
 import BlockData from "./BlockData.js";
 
 //tr:0 === null === transparent
+//un === undefined === placeholder
 const BlockSmoothness = {
   rough: {
     sideMap: [
-      ["tr:0", "bk:0", "bk:0", "bk:0", "tr:0", "bk:0", "bk:0", "tr:0"],
-      ["bk:0", "un:0", "un:0", "un:0", "bk:0", "un:0", "un:0", "bk:0"],
+      ["tr:0", "bk:0", "bk:0", "tr:0", "bk:0", "bk:0", "tr:0", "bk:0"],
+      ["bk:0", "un:0", "un:0", "bk:0", "un:0", "un:0", "bk:0", "un:0"],
     ],
     cornerMap: [
       ["un:0", "un:0", "un:0", "un:0", "un:0", "un:0", "tr:0", "tr:0"],

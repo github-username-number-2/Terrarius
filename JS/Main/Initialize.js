@@ -94,8 +94,8 @@ const performanceLogs = {},
 window.perf = () => performance.now();
 window.logPerformance = (name, speed) => {
   speed = perf() - speed;
-  performanceLogs[name] = performanceLogs[name] + speed || speed;
-  runLogs[name] = runLogs[name] + 1 || 1;
+
+  performanceLogs[name] = speed;
 
   performanceLogsL50[name] = performanceLogsL50[name] || [];
 
@@ -106,9 +106,9 @@ window.logPerformance = (name, speed) => {
   performanceLogsL50[name].push(speed);
 };
 window.getPerformanceLogs = () => {
-  let logs = "Average Performance:\n";
+  let logs = "Performance Last Run:\n";
   for (const log in performanceLogs) {
-    logs += `  ${log}: ${_.round(performanceLogs[log] / runLogs[log], 4)}\n`;
+    logs += `  ${log}: ${_.round(performanceLogs[log], 4)}\n`;
   }
   logs += "Average Performance Last 50 Runs:\n";
   for (const log in performanceLogsL50) {

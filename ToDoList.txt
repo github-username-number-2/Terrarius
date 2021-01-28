@@ -1,8 +1,12 @@
 priorities:
   redo player movement code to use offsetX and offsetY
   make main menu
+  document how the code works and stuff
 
 to do:
+  fix Renderer rectIsOnScreen method
+  make World.updateChunkImage() draw to canvas first, render from canvas, then asynchronously create a data uri to reduce input latency
+  draw block pixels with same color first
   make player auto jump
   make mob auto jump
   put color loading into initialize function
@@ -19,10 +23,13 @@ to do:
   make player render function
   find a girlfriend
 
-maybe will not do:
+maybe will do:
+  randomly flip corner textures for variety
   make block end side textures
 
 done:
+  compress array functions into one file
+  compress code in World.updateChunkImage function
   flip side smoothness randomly for variety
   flip side textures randomly for variety
   make block roughness
