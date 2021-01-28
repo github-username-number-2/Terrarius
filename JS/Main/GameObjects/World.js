@@ -21,10 +21,10 @@ import Block from "/JS/Main/Classes/Block.js";
 import Player from "./Player.js";
 
 import generateWorld from "/JS/Main/Functions/WorldGeneration/GenerateWorld.js";
-import rotateArray from "/JS/Main/Functions/RotateArray.js";
+import rotate2DArray from "/JS/Main/Functions/Rotate2DArray.js";
 import merge2DArray from "/JS/Main/Functions/Merge2DArray.js";
+import flip2DArray from "/JS/Main/Functions/Flip2DArray.js";
 
-window.t=rotateArray
 const secondaryCanvas = document.createElement("canvas"),
   sctx = secondaryCanvas.getContext("2d");
 
@@ -194,8 +194,22 @@ const World = {
         for (let i = 0; i < block.sides.length; i++) {
           //layers side texture
           if (block.sides[i]) {
-            const blockSide = rotateArray(
-              BlockSideTextures[block.sides[i]].sideMap,
+            let sideMap = BlockSideTextures[block.sides[i]].sideMap;
+            //randomly flips side textures to add variety
+            if (block.RenderData.sideTextureInts === undefined) {
+              block.RenderData.sideTextureInts = [
+                getRandomInt(0, 1),
+                getRandomInt(0, 1),
+                getRandomInt(0, 1),
+                getRandomInt(0, 1),
+              ];
+            }
+            if (block.RenderData.sideTextureInts[i]) {
+              sideMap = flip2DArray(sideMap, "x", true);
+            }
+            
+            const blockSide = rotate2DArray(
+              sideMap,
               i,
             );
 
@@ -205,7 +219,7 @@ const World = {
         for (let i = 0; i < block.sides.length; i++) {
           //layers corner side textures
           if (block.sides[i] && block.sides[i] === block.sides[(i + 1) % 4]) {
-            const blockCorner = rotateArray(
+            const blockCorner = rotate2DArray(
               BlockSideTextures[block.sides[i]].cornerMap,
               i,
             );
@@ -223,7 +237,7 @@ const World = {
             && side1 === side2
             && block.blockData.allowedSideTextures.includes(side1)
           ) {
-            const insideCorner = rotateArray(
+            const insideCorner = rotate2DArray(
               BlockSideTextures[side1].insideCornerMap,
               i,
             );
@@ -234,8 +248,22 @@ const World = {
         for (let i = 0; i < block.sides.length; i++) {
           //layers side smoothness
           if (!surroundingBlocks[i] && surroundingBlocks[i] !== undefined) {
-            const blockSide = rotateArray(
-              BlockSideSmoothness[block.blockData.sideSmoothness].sideMap,
+            let sideMap = BlockSideSmoothness[block.blockData.sideSmoothness].sideMap;
+            //randomly flips side textures to add variety
+            if (block.RenderData.sideSmoothnessInts === undefined) {
+              block.RenderData.sideSmoothnessInts = [
+                getRandomInt(0, 1),
+                getRandomInt(0, 1),
+                getRandomInt(0, 1),
+                getRandomInt(0, 1),
+              ];
+            }
+            if (block.RenderData.sideSmoothnessInts[i]) {
+              sideMap = flip2DArray(sideMap, "x", true);
+            }
+
+            const blockSide = rotate2DArray(
+              sideMap,
               i,
             );
 
@@ -248,7 +276,7 @@ const World = {
             !surroundingBlocks[i] && surroundingBlocks[i] !== undefined
             && !surroundingBlocks[(i + 1) % 4] && surroundingBlocks[(i + 1) % 4] !== undefined
           ) {
-            const blockCorner = rotateArray(
+            const blockCorner = rotate2DArray(
               BlockSideSmoothness[block.blockData.sideSmoothness].cornerMap,
               i,
             );
@@ -266,7 +294,7 @@ const World = {
             && side1Smoothness === side2Smoothness
             && diagonalSurroundingBlocks[i]?.blockData?.type !== "solid"
           ) {
-            const insideCorner = rotateArray(
+            const insideCorner = rotate2DArray(
               BlockSideSmoothness[side1Smoothness].insideCornerMap,
               i,
             );

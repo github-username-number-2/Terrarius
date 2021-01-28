@@ -23,6 +23,8 @@ maybe will not do:
   make block end side textures
 
 done:
+  flip side smoothness randomly for variety
+  flip side textures randomly for variety
   make block roughness
   make getDiagonalSurroundingBlocks Block class method
   make getSurroundingBlocks Block class method

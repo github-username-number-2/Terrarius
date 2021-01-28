@@ -16,6 +16,9 @@ const Block = class {
     this.sides = [null, null, null, null];
   }
 
+  //used when rendering
+  RenderData = {};
+
   replace(newBlockName) {
     World.setBlock(this.x, this.y, newBlockName);
   }
@@ -23,7 +26,7 @@ const Block = class {
   getSurroundingBlocks() {
     const x = this.x,
       y = this.y;
-    
+
     //returns [top, right, bottom, left]
     return [
       World.getBlock(x, y - 1),
