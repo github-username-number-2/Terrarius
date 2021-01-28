@@ -1,8 +1,4 @@
 /*
-need to heavily optimize updateChunkImage function down to the last hundredth of a millisecond to decrease initial load time and reduce latency on block manipulation
-
-need to finish workerUpdateChunkImage function
-
 on initial startup, a square of chunks will be loaded around the player
 chunks will be gradually loaded around the player until all are loaded
 when the game is saved, the chunk image map will be converted to data URIs and save in the file
@@ -10,8 +6,6 @@ if this is implemented, save files may be significantly longer (hundreds of giga
 */
 
 import BlockTextures from "/JS/Main/Data/GameData/Blocks/BlockTextures.js";
-//import BlockSideTextures from "/JS/Main/Data/GameData/Blocks/BlockSideTextures.js";
-//import BlockSideSmoothness from "/JS/Main/Data/GameData/Blocks/BlockSmoothness.js";
 
 import BlockData from "/JS/Main/Data/GameData/Blocks/BlockData.js";
 import ChunkData from "/JS/Main/Data/GameData/ChunkData.js";

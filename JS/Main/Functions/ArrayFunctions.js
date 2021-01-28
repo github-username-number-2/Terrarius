@@ -83,13 +83,48 @@ export function rotate2DArray(array, rotate) {
   return array;
 }
 
-export function flip2DArrayDiagonal(array, slope) {
+//can only flip square arrays
+export function flip2DArrayDiagonal(array, slope, newArray) {
   //slope is either "upward" or "downward"
 
+  if (newArray) {
+    array = _.cloneDeep(array);
+  }
+
+  const yLen = array.length,
+    xLen = array[0].length;
+
+
   if (slope === "upward") {
-    //
+    const loopNum = Math.floor(yLen / 2) * xLen + Math.floor(xLen / 2);
+
+
+    for (let i = 0; i < loopNum; i++) {
+      const y = Math.floor(i / xLen),
+        x = i % xLen;
+
+      [
+        array[y][x],
+        array[xLen - x - 1][yLen - y - 1],
+      ] = [
+          array[xLen - x - 1][yLen - y - 1],
+          array[y][x],
+        ];
+    }
   }
   if (slope === "downward") {
-    //
+    for (let x = 1; x < xLen; x++) {
+      for (let y = 0, yLoop = Math.ceil(yLen / 2); y < yLoop; y++) {
+        [
+          array[y][x],
+          array[x][y],
+        ] = [
+            array[x][y],
+            array[y][x],
+          ];
+      }
+    }
   }
+
+  return array;
 }

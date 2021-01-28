@@ -4,9 +4,8 @@ import {
   rotate2DArray,
   merge2DArray,
   flip2DArray,
+  flip2DArrayDiagonal,
 } from "./ArrayFunctions.js";
-//import merge2DArray from "./Merge2DArray.js";
-//import flip2DArray from "./Flip2DArray.js";
 
 export default function layerSideSmoothness(block, blockMap, surroundingBlocks, diagonalSurroundingBlocks) {
   for (let i = 0; i < block.sides.length; i++) {
@@ -40,8 +39,22 @@ export default function layerSideSmoothness(block, blockMap, surroundingBlocks, 
       !surroundingBlocks[i] && surroundingBlocks[i] !== undefined
       && !surroundingBlocks[(i + 1) % 4] && surroundingBlocks[(i + 1) % 4] !== undefined
     ) {
+      let cornerMap = BlockSideSmoothness[block.blockData.sideSmoothness].cornerMap;
+      //randomly flips side textures to add variety
+      if (block.RenderData.cornerSmoothnessInts === undefined) {
+        block.RenderData.cornerSmoothnessInts = [
+          getRandomInt(0, 1),
+          getRandomInt(0, 1),
+          getRandomInt(0, 1),
+          getRandomInt(0, 1),
+        ];
+      }
+      if (block.RenderData.cornerSmoothnessInts[i]) {
+        cornerMap = flip2DArrayDiagonal(cornerMap, "upward", true);
+      }
+
       const blockCorner = rotate2DArray(
-        BlockSideSmoothness[block.blockData.sideSmoothness].cornerMap,
+        cornerMap,
         i,
       );
 
@@ -58,8 +71,22 @@ export default function layerSideSmoothness(block, blockMap, surroundingBlocks, 
         && side1Smoothness === side2Smoothness
         && diagonalSurroundingBlocks[i] ?.blockData ?.type !== "solid"
           ) {
+      let insideCornerMap = BlockSideSmoothness[block.blockData.sideSmoothness].insideCornerMap;
+      //randomly flips side textures to add variety
+      if (block.RenderData.cornerSmoothnessInts === undefined) {
+        block.RenderData.cornerSmoothnessInts = [
+          getRandomInt(0, 1),
+          getRandomInt(0, 1),
+          getRandomInt(0, 1),
+          getRandomInt(0, 1),
+        ];
+      }
+      if (block.RenderData.cornerSmoothnessInts[i]) {
+        insideCornerMap = flip2DArrayDiagonal(insideCornerMap, "upward", true);
+      }
+
       const insideCorner = rotate2DArray(
-        BlockSideSmoothness[side1Smoothness].insideCornerMap,
+        insideCornerMap,
         i,
       );
 

@@ -1,5 +1,4 @@
 priorities:
-  redo player movement code to use offsetX and offsetY
   make main menu
   document how the code works and stuff
 
@@ -19,15 +18,17 @@ to do:
   create wave function to make waves for world gen
   make world raycaster function
   make weather
-  web worker chunk update function
   make player render function
   find a girlfriend
 
 maybe will do:
-  randomly flip corner textures for variety
+  web worker chunk update function
+  redo player movement code to use offsetX and offsetY
   make block end side textures
 
 done:
+  randomly flip corner textures for variety
+  flip2DArrayDiagonal function
   compress array functions into one file
   compress code in World.updateChunkImage function
   flip side smoothness randomly for variety
