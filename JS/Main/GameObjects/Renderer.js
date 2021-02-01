@@ -91,12 +91,16 @@ const Renderer = {
         ctx.fillText("Game Time: " + Math.trunc(time) + "ms", 32, yPixels += 16);
         
         if (performance.memory) {
+          const statStartTime = perf();
+
           const usedMemory = performance.memory.totalJSHeapSize,
             remainingMemory = performance.memory.jsHeapSizeLimit - performance.memory.totalJSHeapSize;
           ctx.fillText("Current JS stack size: " + usedMemory + "B", 32, yPixels += 16);
           ctx.fillText("Remaining JS memory: " + remainingMemory + "B", 32, yPixels += 16);
-          ctx.fillText("Current JS stack size: " + Math.trunc(usedMemory / 1000000) + "MB", 32, yPixels += 16);
-          ctx.fillText("Remaining JS memory: " + Math.trunc(remainingMemory / 1000000) + "MB", 32, yPixels += 16);
+          ctx.fillText("Current JS stack size: " + Math.round(usedMemory / 1000000) + "MB", 32, yPixels += 16);
+          ctx.fillText("Remaining JS memory: " + Math.round(remainingMemory / 1000000) + "MB", 32, yPixels += 16);
+        
+          logPerformance("Display Stats", statStartTime);
         }
         
         getPerformanceLogs().split("\n").forEach(log => {

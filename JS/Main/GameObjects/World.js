@@ -185,8 +185,10 @@ const World = {
 
         let blockMap = BlockTextures[block.blockName].map;
 
-        blockMap = layerSideTextures(block, blockMap, surroundingBlocks, diagonalSurroundingBlocks);
-        blockMap = layerSideSmoothness(block, blockMap, surroundingBlocks, diagonalSurroundingBlocks);
+        if (block.blockData.type === "solid") {
+          blockMap = layerSideTextures(block, blockMap, surroundingBlocks, diagonalSurroundingBlocks);
+          blockMap = layerSideSmoothness(block, blockMap, surroundingBlocks, diagonalSurroundingBlocks);
+        }
 
         //loops through block pixels
         //alternate loops are faster but don't work

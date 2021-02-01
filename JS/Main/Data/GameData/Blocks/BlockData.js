@@ -30,5 +30,8 @@ export default {
 
       allowedSideTextures: [],
     },
+    oakTreeLeftStump: {
+      type: "object",
+    },
   },
 };

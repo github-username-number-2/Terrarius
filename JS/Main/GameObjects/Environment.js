@@ -115,7 +115,7 @@ const Environment = {
           const block = World.getBlock(left, i);
 
           if (
-            (blockCollision && block)
+            (blockCollision && block?.blockData?.type === "solid")
             || (mapEdgeCollision && World.isMapEdge(left, i))
           ) {
             const collision = left + 1;
@@ -135,7 +135,7 @@ const Environment = {
           const block = World.getBlock(right, i);
 
           if (
-            (blockCollision && block)
+            (blockCollision && block?.blockData?.type === "solid")
             || (mapEdgeCollision && World.isMapEdge(right, i))
           ) {
             const collision = right;
@@ -166,7 +166,7 @@ const Environment = {
           const block = World.getBlock(i, top);
 
           if (
-            (blockCollision && block)
+            (blockCollision && block?.blockData?.type === "solid")
             || (mapEdgeCollision && World.isMapEdge(i, top))
           ) {
             const collision = top + 1;
@@ -186,7 +186,7 @@ const Environment = {
           const block = World.getBlock(i, bottom);
 
           if (
-            (blockCollision && block)
+            (blockCollision && block?.blockData?.type === "solid")
             || (mapEdgeCollision && World.isMapEdge(i, bottom))
           ) {
             const collision = bottom;

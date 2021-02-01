@@ -1,4 +1,5 @@
 priorities:
+  create block type: "object"
   make main menu
   document how the code works and stuff
 

@@ -21,6 +21,9 @@ if ("serviceWorker" in navigator) {
 window.canvas = document.getElementById("canvas");
 window.ctx = canvas.getContext("2d", { alpha: false });
 
+//doesn't seem to speed up performance too much
+//ctx.imageSmoothingEnabled = false;
+
 canvas.width = CanvasData.width * CanvasData.scale;
 canvas.height = CanvasData.height * CanvasData.scale;
 

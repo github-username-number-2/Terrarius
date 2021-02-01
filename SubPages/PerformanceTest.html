@@ -4,9 +4,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Performance Test</title>
+	<title>Context Color Change Performance Test</title>
 	
-  <script src="JS/Libraries/Lodash.min.js">
+  <script src="/JS/Libraries/Lodash.min.js">
 
 	</script>
 </head>
@@ -68,7 +68,7 @@
       const slowest = Math.max(t1, t2),
         fastest = Math.min(t1, t2);
 
-      resf.innerHTML = `test 1 is ${_.round(t1 - t2, 4)}ms (${_.round(slowest / fastest * 100, 4)}%) ${t1 > t2 ? "slower" : "faster"} than test 2`;
+      resf.innerHTML = `test 1 is ${_.round(slowest - fastest, 4)}ms (${_.round(slowest / fastest * 100, 4)}%) ${t1 > t2 ? "slower" : "faster"} than test 2`;
     }, 500);
 	</script>
 </body>

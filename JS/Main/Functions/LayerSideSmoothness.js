@@ -10,7 +10,10 @@ import {
 export default function layerSideSmoothness(block, blockMap, surroundingBlocks, diagonalSurroundingBlocks) {
   for (let i = 0; i < block.sides.length; i++) {
     //layers side smoothness
-    if (!surroundingBlocks[i] && surroundingBlocks[i] !== undefined) {
+    if (
+      surroundingBlocks[i] ?.blockData ?.type !== "solid"
+        && surroundingBlocks[i] !== undefined
+    ) {
       let sideMap = BlockSideSmoothness[block.blockData.sideSmoothness].sideMap;
       //randomly flips side textures to add variety
       if (block.RenderData.sideSmoothnessInts === undefined) {
@@ -36,8 +39,9 @@ export default function layerSideSmoothness(block, blockMap, surroundingBlocks, 
   for (let i = 0; i < block.sides.length; i++) {
     //layers corner smoothness
     if (
-      !surroundingBlocks[i] && surroundingBlocks[i] !== undefined
-      && !surroundingBlocks[(i + 1) % 4] && surroundingBlocks[(i + 1) % 4] !== undefined
+      surroundingBlocks[i] ?.blockData ?.type !== "solid"
+        && !surroundingBlocks[(i + 1) % 4]
+        && surroundingBlocks[(i + 1) % 4] !== undefined
     ) {
       let cornerMap = BlockSideSmoothness[block.blockData.sideSmoothness].cornerMap;
       //randomly flips side textures to add variety
@@ -70,7 +74,7 @@ export default function layerSideSmoothness(block, blockMap, surroundingBlocks, 
       side1Smoothness
         && side1Smoothness === side2Smoothness
         && diagonalSurroundingBlocks[i] ?.blockData ?.type !== "solid"
-          ) {
+    ) {
       let insideCornerMap = BlockSideSmoothness[block.blockData.sideSmoothness].insideCornerMap;
       //randomly flips side textures to add variety
       if (block.RenderData.cornerSmoothnessInts === undefined) {

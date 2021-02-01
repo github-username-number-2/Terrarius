@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Render Performance Test</title>
+
+	<script src="/JS/Libraries/Lodash.min.js">
+
+	</script>
+
+	<style>
+		#c1,
+		#c2 {
+			display: block;
+			width: 150px;
+			height: 150px;
+			outline: 1px solid #000000;
+		}
+	</style>
+</head>
+
+<body>
+	<h3 id="t">Performance Over $ Tests</h3>
+  <code>ctx.drawImage</code>
+	<canvas id="c1" width="400" height="400"></canvas>
+	<p id="pt1"></p>
+  <p>_________________________</p>
+  <code>ctx.putImageData</code>
+	<canvas id="c2" width="400" height="400"></canvas>
+	<p id="pt2"></p>
+  <p id="resf"></p>
+
+	<script>
+		const testNumber = 1000;
+
+    t.innerHTML = t.innerHTML.replace("$", testNumber);
+
+		const img = new Image();
+    img.src = "https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg";
+    img.crossOrigin = "Anonymous";
+    
+    setTimeout(function () {
+      const ctx1 = c1.getContext("2d"),
+        ctx2 = c2.getContext("2d");
+      
+      const p1 = performance.now();
+      for (let i = 0; i < testNumber; i++) {
+        ctx1.drawImage(
+          img,
+          0,
+          0,
+          c1.width,
+          c1.height,
+        );
+      }
+      const t1 = _.round((performance.now() - p1) / testNumber, 4);
+      pt1.innerHTML = t1 + "ms";
+
+      const imageData = ctx1.getImageData(0, 0, c1.width, c1.height);
+
+      const p2 = performance.now();
+      for (let i = 0; i < testNumber; i++) {
+        ctx2.putImageData(imageData, 0, 0, 0, 0, imageData.width, imageData.height);
+      }
+      const t2 = _.round((performance.now() - p2) / testNumber, 4);
+      pt2.innerHTML = t2 + "ms";
+
+      const slowest = Math.max(t1, t2),
+        fastest = Math.min(t1, t2);
+
+      resf.innerHTML = `test 1 is ${_.round(slowest - fastest, 4)}ms (${_.round(slowest / fastest * 100, 4)}%) ${t1 > t2 ? "slower" : "faster"} than test 2`;
+    }, 500);
+	</script>
+</body>
+
+</html>

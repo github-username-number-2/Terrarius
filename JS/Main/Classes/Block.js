@@ -4,6 +4,10 @@ import BlockData from "/JS/Main/Data/GameData/Blocks/BlockData.js";
 
 const Block = class {
   constructor(x, y, blockName) {
+    if (!BlockData.blocks[blockName]) {
+      console.log(new TypeError("Block class could not be created, block with name \"" + blockName + "\" does not exist."));
+    }
+
     this.blockName = blockName;
 
     this.x = x;

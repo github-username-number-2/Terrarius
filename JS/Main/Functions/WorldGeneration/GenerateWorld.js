@@ -60,6 +60,8 @@ async function generateWorld(size, evilBiome, seed, updateFunction = () => { }) 
 
   WorldGenerator.fillExposedSideTextures(0, 170, width, 11, "grass");
 
+  WorldGenerator.setBlock(450, 179, "oakTreeLeftStump");
+
   WorldGenerator.fillAreaRandom(
     196,
     30,

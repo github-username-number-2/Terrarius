@@ -67,8 +67,7 @@ export default function layerSideTextures(block, blockMap, surroundingBlocks, di
       side2 = surroundingBlocks[iIncremented] ?.sides[i];
 
     if (
-      surroundingBlocks[i]
-      && side1 === side2
+      side1 === side2
       && block.blockData.allowedSideTextures.includes(side1)
     ) {
       let insideCornerMap = BlockSideTextures[side1].insideCornerMap;
